@@ -1,342 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARJSevenX Music ⚡</title>
-  <style>
-    /* --- PENINGKATAN UMUM --- */
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background: #111;
-        color: #fff;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 25px;
-        background: #000;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .logo {
-        font-size: 22px;
-        font-weight: bold;
-        background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-size: 400% 400%;
-        animation: rainbow 6s linear infinite;
-    }
-
-    @keyframes rainbow {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
-    }
-
-    .song-list {
-        padding: 20px;
-    }
-
-    .song {
-        display: flex;
-        align-items: center;
-        background: #222;
-        padding: 12px;
-        margin-bottom: 12px;
-        border-radius: 10px;
-        border: 2px solid transparent;
-        /* Transisi TANPA border-color agar instan */
-        transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-    }
-
-    .song:hover {
-        background-color: #333;
-        transform: translateY(-3px);
-    }
-
-    .song.playing {
-        border-color: #e74c3c;
-        box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
-        transform: scale(1.01);
-    }
-
-    .song img {
-        width: 70px;
-        height: 70px;
-        border-radius: 10px;
-        margin-right: 15px;
-    }
-
-    .song-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .song-title {
-        font-size: 16px;
-        margin-bottom: 6px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .controls {
-        display: flex;
-        align-items: center;
-    }
-    
-    /* --- INI BAGIAN PENTING UNTUK MENGHILANGKAN BIRU-BIRU --- */
-    .play-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        margin-right: 10px;
-        padding: 0;
-        transform: translateZ(0);
-        /* Perintah ini menghilangkan sorotan biru saat disentuh di mobile */
-        -webkit-tap-highlight-color: transparent; 
-    }
-
-    /* Menghilangkan outline/garis fokus juga untuk jaga-jaga */
-    .play-btn:focus, .play-btn:focus-visible {
-        outline: none !important;
-        box-shadow: none !important;
-    }
-    /* --- BATAS AKHIR BAGIAN PENTING --- */
-
-
-    .play-btn svg {
-        width: 30px;
-        height: 30px;
-        fill: white;
-        transition: transform 0.2s ease;
-    }
-
-    .play-btn:hover svg {
-        transform: scale(1.1);
-    }
-
-    .progress-container {
-        flex: 1;
-        height: 6px;
-        background: #444;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .progress {
-        height: 6px;
-        background: #0f0;
-        border-radius: 5px;
-        width: 0%;
-        transition: width 0.1s linear;
-    }
-
-    .song-duration {
-        font-size: 12px;
-        color: #aaa;
-        margin-left: 15px;
-        min-width: 95px;
-        text-align: right;
-    }
-
-    footer {
-        text-align: center;
-        padding: 20px;
-        color: #888;
-        font-size: 14px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARJSevenX Music ⚡</title>
+    <style>
+        :root {
+            --primary-bg: #111;
+            --secondary-bg: #222;
+            --accent-color: #e74c3c;
+            --text-color: #fff;
+            --subtle-text: #aaa;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: #000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: rainbow 6s linear infinite;
+        }
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        .song-list { padding: 20px; }
+        .song {
+            display: flex;
+            align-items: center;
+            background: var(--secondary-bg);
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+        .song:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+        .song.playing {
+            border-color: var(--accent-color);
+        }
+        .song img {
+            width: 60px; /* Ukuran gambar sedikit dikurangi */
+            height: 60px;
+            border-radius: 8px;
+            margin-right: 15px;
+            object-fit: cover; /* Memastikan gambar tidak gepeng */
+            background-color: #444; /* Warna placeholder saat gambar loading */
+        }
+        .song-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .song-title {
+            font-size: 16px;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .controls { display: flex; align-items: center; }
+        .play-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-right: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .play-btn:focus, .play-btn:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        .play-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--text-color);
+            transition: transform 0.2s ease;
+        }
+        .play-btn:hover svg { transform: scale(1.1); }
+        .progress-container {
+            flex: 1;
+            height: 6px;
+            background: #444;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .progress {
+            height: 100%;
+            background: #0f0;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        .song-duration {
+            font-size: 12px;
+            color: var(--subtle-text);
+            margin-left: 15px;
+            min-width: 90px;
+            text-align: right;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="logo">ARJSevenX Music ⚡</div>
-  </header>
-
-  <div class="song-list" id="songList"></div>
-
-  <footer>
-    Made by ©ARJSevenX
-  </footer>
-
-  <script>
-    const songListContainer = document.getElementById("songList");
-    const audio = new Audio();
-    let currentSongIndex = -1;
-    let isPlaying = false;
-
-    const songs = [
-      {
-        title: "Bohemian Rhapsody",
-        url: "https://files.catbox.moe/m4rby9.mp3",
-        cover: "https://files.catbox.moe/om5ifl.jpg"
-      },
-      {
-        title: "The Night We Met",
-        url: "https://files.catbox.moe/f4qrje.mp3",
-        cover: "https://files.catbox.moe/vp61im.jpg"
-      },
-      {
-        title: "DJ Tabola bale X Calon Mantu",
-        url: "https://files.catbox.moe/3a8ibj.mp3",
-        cover: "https://files.catbox.moe/bgj8wf.jpg"
-      },
-      {
-        title: "Forever Young",
-        url: "https://files.catbox.moe/lx4wjz.mp3",
-        cover: "https://files.catbox.moe/i8wnwv.jpg"
-      }
-    ];
-
-    const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M16 12v40l36-20z"/></svg>`;
-    const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="16" y="12" width="10" height="40"/><rect x="38" y="12" width="10" height="40"/></svg>`;
-    
-    function formatTime(seconds) {
-      if (isNaN(seconds) || seconds === 0) return "00:00";
-      const minutes = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    function loadSongs() {
-      songListContainer.innerHTML = "";
-      songs.forEach((song, index) => {
-        songListContainer.innerHTML += `
-          <div class="song" data-index="${index}">
-            <img src="${song.cover}" alt="cover">
-            <div class="song-info">
-              <div class="song-title">${song.title}</div>
-              <div class="controls">
-                <button class="play-btn">${playIcon}</button>
-                <div class="progress-container">
-                  <div class="progress"></div>
-                </div>
-                <div class="song-duration">00:00 / 00:00</div>
-              </div>
-            </div>
-          </div>
-        `;
-        getInitialDuration(song, index);
-      });
-    }
-
-    function getInitialDuration(song, index) {
-        const tempAudio = new Audio(song.url);
-        tempAudio.addEventListener('loadedmetadata', () => {
-            const songElement = document.querySelector(`.song[data-index="${index}"]`);
-            if (songElement) {
-                const durationEl = songElement.querySelector('.song-duration');
-                durationEl.textContent = `00:00 / ${formatTime(tempAudio.duration)}`;
-            }
-        });
-    }
-
-    function updateUI() {
-      document.querySelectorAll('.song').forEach((songElement, index) => {
-        const playBtn = songElement.querySelector('.play-btn');
-        const progress = songElement.querySelector('.progress');
-        const durationEl = songElement.querySelector('.song-duration');
-        
-        if (index === currentSongIndex) {
-            songElement.classList.add('playing'); 
-            playBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
+    <header>
+        <div class="logo">ARJSevenX Music ⚡</div>
+    </header>
+    <div class="song-list" id="songList"></div>
+    <footer>
+        Made by ©ARJSevenX
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const songListContainer = document.getElementById("songList");
+            const audio = new Audio();
+            let currentSongIndex = -1;
+            let isPlaying = false;
             
-            const currentTime = audio.currentTime;
-            const totalDuration = audio.duration;
-            progress.style.width = totalDuration ? `${(currentTime / totalDuration) * 100}%` : "0%";
-            if (!isNaN(totalDuration)) {
-                durationEl.textContent = `${formatTime(currentTime)} / ${formatTime(totalDuration)}`;
+            // OPTIMASI: Tambahkan properti preload="metadata" untuk audio
+            audio.preload = "metadata";
+
+            const songs = [
+                { title: "Bohemian Rhapsody", url: "https://files.catbox.moe/m4rby9.mp3", cover: "https://files.catbox.moe/om5ifl.jpg" },
+                { title: "The Night We Met", url: "https://files.catbox.moe/f4qrje.mp3", cover: "https://files.catbox.moe/vp61im.jpg" },
+                { title: "DJ Tabola bale X Calon Mantu", url: "https://files.catbox.moe/3a8ibj.mp3", cover: "https://files.catbox.moe/bgj8wf.jpg" },
+                { title: "Forever Young", url: "https://files.catbox.moe/lx4wjz.mp3", cover: "https://files.catbox.moe/i8wnwv.jpg" }
+            ];
+
+            const playIcon = `<svg viewBox="0 0 64 64"><path d="M16 12v40l36-20z"/></svg>`;
+            const pauseIcon = `<svg viewBox="0 0 64 64"><rect x="16" y="12" width="10" height="40"/><rect x="38" y="12" width="10" height="40"/></svg>`;
+            
+            function formatTime(seconds) {
+                if (isNaN(seconds) || !isFinite(seconds)) return "00:00";
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             }
 
-        } else {
-            songElement.classList.remove('playing');
-            playBtn.innerHTML = playIcon;
-            progress.style.width = "0%";
-        }
-      });
-    }
+            function loadSongs() {
+                let songHTML = '';
+                songs.forEach((song, index) => {
+                    songHTML += `
+                        <div class="song" data-index="${index}">
+                            <img src="${song.cover}" alt="${song.title}" loading="lazy">
+                            <div class="song-info">
+                                <div class="song-title">${song.title}</div>
+                                <div class="controls">
+                                    <button class="play-btn">${playIcon}</button>
+                                    <div class="progress-container"><div class="progress"></div></div>
+                                    <div class="song-duration">--:--</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                songListContainer.innerHTML = songHTML;
+            }
+            
+            function updateDurations() {
+                document.querySelectorAll('.song').forEach((songElement, index) => {
+                    const tempAudio = new Audio(songs[index].url);
+                    tempAudio.addEventListener('loadedmetadata', () => {
+                        const durationEl = songElement.querySelector('.song-duration');
+                        if (durationEl) {
+                            durationEl.textContent = `00:00 / ${formatTime(tempAudio.duration)}`;
+                        }
+                    }, { once: true });
+                });
+            }
 
-    function playSong(index) {
-      if (currentSongIndex !== index) {
-        const oldSongElement = document.querySelector(`.song[data-index="${currentSongIndex}"]`);
-        if (oldSongElement) {
-            oldSongElement.classList.remove('playing');
-        }
-        currentSongIndex = index;
-        audio.src = songs[index].url;
-      }
-      audio.play();
-      isPlaying = true;
-      updateUI();
-    }
+            function updateUI() {
+                const allSongs = document.querySelectorAll('.song');
+                allSongs.forEach((songElement, index) => {
+                    const playBtn = songElement.querySelector('.play-btn');
+                    if (index === currentSongIndex) {
+                        songElement.classList.add('playing');
+                        playBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
+                    } else {
+                        songElement.classList.remove('playing');
+                        playBtn.innerHTML = playIcon;
+                    }
+                });
 
-    function pauseSong() {
-      audio.pause();
-      isPlaying = false;
-      updateUI(); 
-    }
+                if (currentSongIndex > -1) {
+                    const currentSongEl = allSongs[currentSongIndex];
+                    const progress = currentSongEl.querySelector('.progress');
+                    const durationEl = currentSongEl.querySelector('.song-duration');
+                    const currentTime = audio.currentTime;
+                    const totalDuration = audio.duration;
+                    
+                    progress.style.width = totalDuration ? `${(currentTime / totalDuration) * 100}%` : "0%";
+                    if (!isNaN(totalDuration)) {
+                        durationEl.textContent = `${formatTime(currentTime)} / ${formatTime(totalDuration)}`;
+                    }
+                }
+            }
+            
+            async function playSong(index) {
+                if (currentSongIndex !== index) {
+                    // Reset UI lagu lama
+                    const oldSongEl = document.querySelector(`.song[data-index="${currentSongIndex}"]`);
+                    if (oldSongEl) {
+                        oldSongEl.querySelector('.progress').style.width = "0%";
+                    }
+                    currentSongIndex = index;
+                    audio.src = songs[index].url;
+                }
+                
+                try {
+                    await audio.play();
+                    isPlaying = true;
+                } catch (error) {
+                    console.error("Gagal memutar lagu:", error);
+                    isPlaying = false;
+                }
+                updateUI();
+            }
 
-    songListContainer.addEventListener('click', (e) => {
-      const songElement = e.target.closest('.song');
-      if (!songElement) return;
+            function pauseSong() {
+                audio.pause();
+                isPlaying = false;
+                updateUI();
+            }
 
-      const index = parseInt(songElement.dataset.index);
-      const isPlayBtn = e.target.closest('.play-btn');
-      const isProgressContainer = e.target.closest('.progress-container');
+            songListContainer.addEventListener('click', (e) => {
+                const songElement = e.target.closest('.song');
+                if (!songElement) return;
 
-      if (isPlayBtn) {
-        if (currentSongIndex === index && isPlaying) {
-          pauseSong();
-        } else {
-          playSong(index);
-        }
-      }
+                const index = parseInt(songElement.dataset.index, 10);
+                const isPlayBtn = e.target.closest('.play-btn');
+                const isProgressContainer = e.target.closest('.progress-container');
 
-      if (isProgressContainer) {
-        const seek = (event) => {
-            const rect = isProgressContainer.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const width = isProgressContainer.clientWidth;
-            audio.currentTime = (clickX / width) * audio.duration;
-        };
+                if (isPlayBtn) {
+                    if (currentSongIndex === index && isPlaying) {
+                        pauseSong();
+                    } else {
+                        playSong(index);
+                    }
+                }
 
-        if (currentSongIndex !== index) {
-            playSong(index);
-            audio.addEventListener('canplay', () => seek(e), { once: true });
-        } else {
-            seek(e);
-        }
-      }
-    });
+                if (isProgressContainer) {
+                    const rect = isProgressContainer.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const width = isProgressContainer.clientWidth;
+                    if (currentSongIndex !== index) {
+                        playSong(index).then(() => {
+                           audio.currentTime = (clickX / width) * audio.duration;
+                        });
+                    } else {
+                       audio.currentTime = (clickX / width) * audio.duration;
+                    }
+                }
+            });
 
-    audio.addEventListener('timeupdate', updateUI);
-    audio.addEventListener('ended', () => {
-        const endedSong = document.querySelector(`.song[data-index="${currentSongIndex}"]`);
-        if(endedSong) {
-            endedSong.classList.remove('playing');
-        }
-        pauseSong();
-    });
-    audio.addEventListener('loadedmetadata', updateUI);
+            audio.addEventListener('timeupdate', updateUI);
+            audio.addEventListener('ended', pauseSong);
 
-    loadSongs();
-  </script>
+            // Inisialisasi
+            loadSongs();
+            updateDurations();
+        });
+    </script>
 </body>
 </html>
