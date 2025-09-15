@@ -45,12 +45,8 @@
     }
 
     @keyframes rainbow {
-        0% {
-            background-position: 0% 50%;
-        }
-        100% {
-            background-position: 100% 50%;
-        }
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
     }
 
     .song-list {
@@ -64,10 +60,9 @@
         padding: 12px;
         margin-bottom: 12px;
         border-radius: 10px;
-        /* Border transparan awal agar layout tidak loncat */
-        border: 2px solid transparent; 
-        /* Transisi untuk semua properti yang akan berubah */
-        transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        border: 2px solid transparent;
+        /* Transisi TANPA border-color agar instan */
+        transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
     }
 
@@ -75,12 +70,11 @@
         background-color: #333;
         transform: translateY(-3px);
     }
-    
-    /* --- INI BAGIAN PENTING UNTUK GARIS MERAH --- */
+
     .song.playing {
-        border-color: #e74c3c; /* Warna border merah */
-        box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); /* Efek cahaya merah */
-        transform: scale(1.01); /* Sedikit membesar */
+        border-color: #e74c3c;
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        transform: scale(1.01);
     }
 
     .song img {
@@ -107,15 +101,26 @@
         display: flex;
         align-items: center;
     }
-
+    
+    /* --- INI BAGIAN PENTING UNTUK MENGHILANGKAN BIRU-BIRU --- */
     .play-btn {
         background: none;
         border: none;
         cursor: pointer;
         margin-right: 10px;
         padding: 0;
-        transform: translateZ(0); 
+        transform: translateZ(0);
+        /* Perintah ini menghilangkan sorotan biru saat disentuh di mobile */
+        -webkit-tap-highlight-color: transparent; 
     }
+
+    /* Menghilangkan outline/garis fokus juga untuk jaga-jaga */
+    .play-btn:focus, .play-btn:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    /* --- BATAS AKHIR BAGIAN PENTING --- */
+
 
     .play-btn svg {
         width: 30px;
@@ -250,7 +255,6 @@
         const durationEl = songElement.querySelector('.song-duration');
         
         if (index === currentSongIndex) {
-            // Bagian ini menambahkan garis merah
             songElement.classList.add('playing'); 
             playBtn.innerHTML = isPlaying ? pauseIcon : playIcon;
             
@@ -262,7 +266,6 @@
             }
 
         } else {
-            // Bagian ini memastikan lagu lain tidak punya garis merah
             songElement.classList.remove('playing');
             playBtn.innerHTML = playIcon;
             progress.style.width = "0%";
@@ -274,7 +277,7 @@
       if (currentSongIndex !== index) {
         const oldSongElement = document.querySelector(`.song[data-index="${currentSongIndex}"]`);
         if (oldSongElement) {
-            oldSongElement.classList.remove('playing'); // Hapus garis dari lagu lama
+            oldSongElement.classList.remove('playing');
         }
         currentSongIndex = index;
         audio.src = songs[index].url;
@@ -287,7 +290,6 @@
     function pauseSong() {
       audio.pause();
       isPlaying = false;
-      // Saat pause, garis merah tetap ada karena kita tidak menghapus class 'playing'
       updateUI(); 
     }
 
@@ -309,8 +311,9 @@
 
       if (isProgressContainer) {
         const seek = (event) => {
+            const rect = isProgressContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
             const width = isProgressContainer.clientWidth;
-            const clickX = event.offsetX;
             audio.currentTime = (clickX / width) * audio.duration;
         };
 
@@ -324,7 +327,6 @@
     });
 
     audio.addEventListener('timeupdate', updateUI);
-    // Saat lagu selesai, hapus juga garis merahnya
     audio.addEventListener('ended', () => {
         const endedSong = document.querySelector(`.song[data-index="${currentSongIndex}"]`);
         if(endedSong) {
