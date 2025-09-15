@@ -100,12 +100,15 @@ header {
     cursor: pointer;
     margin-right: 10px;
     padding: 0;
-    transform: translateZ(0); 
+    transform: translateZ(0);
+    /* TAMBAHAN: Mencegah highlight biru saat ditekan lama di mobile */
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* --- BARU: Menghilangkan garis biru saat tombol di-klik --- */
-.play-btn:focus {
-    outline: none;
+/* Diubah: Menghilangkan garis biru DENGAN CARA PAKSA */
+.play-btn:focus, .play-btn:focus-visible {
+    outline: none !important;
+    box-shadow: none !important; /* Menghapus efek bayangan juga jika ada */
 }
 
 .play-btn svg {
